@@ -10,7 +10,7 @@ pros::Motor intake(2);
 pros::Motor stage2(-16);
 pros::Motor outtake(-12);
 
-pros::ADIDigitalOut MatchL('A');
+pros::ADIDigitalOut MatchL('F');
 pros::ADIDigitalOut Descore('G');
 
 pros::Imu imu1(14);
@@ -26,9 +26,9 @@ pros::Imu imu1(14);
 
 
 // motor groups
-pros::MotorGroup leftMotors({-11, -12, -13},
+pros::MotorGroup leftMotors({-4, -7, -9},
                             pros::MotorGearset::blue); // left motor group - all reversed
-pros::MotorGroup rightMotors({18, 19, 20}, pros::MotorGearset::blue); // right motor group - All same direction
+pros::MotorGroup rightMotors({3, 5, 8}, pros::MotorGearset::blue); // right motor group - All same direction
 
 
 // // TRACKING WHEELS:
