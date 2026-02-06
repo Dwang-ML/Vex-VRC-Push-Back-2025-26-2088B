@@ -1,5 +1,6 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep odom color sort rorational on lb
+#include "pros/misc.h"
 #include <cmath>
 
 // controller
@@ -239,15 +240,23 @@ void opcontrol() {
 
         chassis.tank(leftY, rightY);
 
-        // intake
+        // intake + outtake
+        int intake_speed = 0;
+        int outtake_speed = 0;
 		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-            intake.move_voltage(12000);
-            outtake.move_voltage(12000);
+            intake_speed = 1;
         }
-        else {
-            intake.brake();
-            outtake.brake();
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            intake_speed = -1;
+            outtake_speed = -1;
         }
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            intake_speed = 1;
+            outtake_speed = 1;
+        }
+
+        intake.move_voltage(intake_speed * 12000);
+        outtake.move_voltage(outtake_speed * 12000);
         
         // MatchL control
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
