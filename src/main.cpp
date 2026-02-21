@@ -8,10 +8,10 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::Motor intake(2);
 pros::Motor stage2(-16);
-pros::Motor outtake(-12);
+pros::Motor outtake(12);
 
-pros::ADIDigitalOut MatchL('F');
-pros::ADIDigitalOut Descore('G');
+pros::adi::DigitalOut MatchL('F');
+pros::adi::DigitalOut Descore('G');
 
 pros::Imu imu1(14);
 
