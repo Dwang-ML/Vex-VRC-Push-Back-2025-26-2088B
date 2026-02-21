@@ -106,7 +106,6 @@ lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors
  */
 
 void initialize() {
-    pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
 
     // the default rate is 50. however, if you need to change the rate, you
@@ -130,6 +129,8 @@ void initialize() {
             pros::delay(50);
         }
     });
+    MatchL.set_value(false);
+    Descore.set_value(false);
 }
 
 /**
@@ -155,6 +156,10 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
 void red_right() {
     chassis.setPose(0, 0, 0);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+    pros::delay(500);
+    MatchL.set_value(false);
+    Descore.set_value(false);
+
     chassis.moveToPoint(19, 38, 4000, {.forwards=true, .maxSpeed=80, .minSpeed=30}, true);
     pros::delay(200);
     intake.move_voltage(12000);
@@ -219,7 +224,7 @@ void red_right() {
 void autonomous() {
     // set position to x:0, y:0, heading:0
     chassis.setPose(0, 0, 0);
-    red_right();
+    chassis.moveToPose(0, 10,  0, 1000);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }
 /**
@@ -227,15 +232,15 @@ void autonomous() {
  */
 
 void opcontrol() {
-    bool MatchL_state = 0;
+    bool MatchL_state = 1;
     bool reset_MatchL = false;
-    bool Descore_state = 0;
+    bool Descore_state = 1;
     bool reset_Descore = false;
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	while (true){
         // get joystick positions
-        int leftY = std::copysign(std::pow(controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 100.0, 2) * 100, controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
-        int rightY = std::copysign(std::pow(controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) / 100.0, 2) * 100, controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
 
         chassis.tank(leftY, rightY);
@@ -271,7 +276,7 @@ void opcontrol() {
 				reset_MatchL = false;
 			}
 		}
-		else if (not controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
+		else {
 			reset_MatchL = true;
 		}
 
@@ -288,7 +293,7 @@ void opcontrol() {
 				reset_Descore = false;
 			}
 		}
-		else if (not controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+		else {
 			reset_Descore = true;
 		}
 	}
